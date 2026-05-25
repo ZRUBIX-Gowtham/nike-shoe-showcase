@@ -24,25 +24,15 @@ body {
   color: #ffffff;
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   scroll-behavior: smooth;
-  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Customized sleek developer scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
+/* Hide scrollbar completely for all elements to maintain immersive full-screen design */
+html, body, * {
+  scrollbar-width: none !important;  /* Firefox */
+  -ms-overflow-style: none !important;  /* IE and Edge */
 }
 
-::-webkit-scrollbar-track {
-  background: #000000;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #111111;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #ffffff;
+::-webkit-scrollbar, *::-webkit-scrollbar {
+  display: none !important;  /* Chrome, Safari, and Opera */
 }
