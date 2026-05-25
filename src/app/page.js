@@ -277,7 +277,7 @@ export default function Home() {
           Scroll to explore
         </span>
         <div className="animate-bounce">
-          <div className="w-[1px] h-6 md:h-6 bg-gradient-to-b from-white/80 to-transparent" />
+          <div className="w-[1px] h-5 md:h-6 bg-gradient-to-b from-white/80 to-transparent" />
         </div>
       </div>
 
