@@ -23,7 +23,6 @@ body {
   background-color: #000000;
   color: #ffffff;
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
 }
 
