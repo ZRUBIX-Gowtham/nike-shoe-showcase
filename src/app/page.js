@@ -7,6 +7,7 @@ import Preloader from '@/components/Preloader';
 import NetworkIndicator from '@/components/NetworkIndicator';
 import CustomCursor from '@/components/CustomCursor';
 import HomeHero from '@/components/HomeHero';
+import AutoScrollControl from '@/components/AutoScrollControl';
 
 export default function Home() {
   const [loadedCount, setLoadedCount] = useState(0);
@@ -15,9 +16,19 @@ export default function Home() {
   // True until the preloader exit animation FULLY completes
   const [preloaderGone, setPreloaderGone] = useState(false);
 
+  // Auto scroll states
+  const [isAutoScrollModalOpen, setIsAutoScrollModalOpen] = useState(false);
+  const [isAutoScrolling, setIsAutoScrolling] = useState(false);
+  const [autoScrollSpeed, setAutoScrollSpeed] = useState(2.0);
+  const [isAutoScrollPaused, setIsAutoScrollPaused] = useState(false);
+
   // Live frame tracking (from ScrollSequence callback)
   const currentFrameRef = useRef(0);
   const totalFrameRef = useRef(0);
+  const isAutoScrollingRef = useRef(isAutoScrolling);
+  useEffect(() => {
+    isAutoScrollingRef.current = isAutoScrolling;
+  }, [isAutoScrolling]);
 
   const finalRef = useRef(null);
   const heroTextRef = useRef(null);
@@ -167,6 +178,10 @@ export default function Home() {
     updateOverlay(contentOverlay2Ref, 293, 363, 15, 15);
     updateOverlay(contentOverlay3Ref, 887, 940, 15, 15);
     updateOverlay(contentOverlay4Ref, 1315, 1400, 18, 18);
+
+    if (displayFrame >= total && isAutoScrollingRef.current) {
+      setIsAutoScrolling(false);
+    }
   }, []);
 
   return (
@@ -219,6 +234,19 @@ export default function Home() {
       {/* Floating Menu */}
       <HomeFloatingMenu />
 
+      {/* Auto Scroll Controls */}
+      <AutoScrollControl
+        isOpen={isAutoScrollModalOpen}
+        onClose={() => setIsAutoScrollModalOpen(false)}
+        isAutoScrolling={isAutoScrolling}
+        setIsAutoScrolling={setIsAutoScrolling}
+        speed={autoScrollSpeed}
+        setSpeed={setAutoScrollSpeed}
+        isPaused={isAutoScrollPaused}
+        setIsPaused={setIsAutoScrollPaused}
+        isLocked={!preloaderGone}
+      />
+
       {/* High-Performance Canvas Scroll Sequence */}
       <ScrollSequence
         onProgress={(loaded, total) => {
@@ -249,6 +277,44 @@ export default function Home() {
           height: '26px',
           whiteSpace: 'nowrap',
         }}>
+          {/* Auto Scroll Button */}
+          <button
+            id="autoscroll-top-trigger"
+            onClick={() => setIsAutoScrollModalOpen(true)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'rgba(255, 255, 255, 0.65)',
+              cursor: 'pointer',
+              pointerEvents: 'auto',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              fontSize: '8px',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.12em',
+              padding: '0 8px 0 0',
+              height: '100%',
+              transition: 'color 0.2s ease, transform 0.2s ease',
+              outline: 'none',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = '#FF3A2D';
+              e.currentTarget.style.transform = 'scale(1.05)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = 'rgba(255, 255, 255, 0.65)';
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          >
+            <i className="fas fa-angles-down" style={{ fontSize: '9px' }}></i>
+            Auto Scroll
+          </button>
+
+          {/* thin divider */}
+          <div style={{ width: '1px', height: '12px', background: 'rgba(255,255,255,0.12)', marginRight: '10px', flexShrink: 0 }} />
+
           {/* FRAME label */}
           <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '7.5px', letterSpacing: '0.22em', textTransform: 'uppercase' }}>Frame</span>
           <span style={{ marginLeft: '6px', color: '#fff', fontSize: '11.5px', fontWeight: 700, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }} ref={frameCurrentRef}>0001</span>
